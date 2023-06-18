@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.doreamon08.SpringMVCTutor2.dao.BookDao;
 import ru.doreamon08.SpringMVCTutor2.dao.PersonDAO;
 import ru.doreamon08.SpringMVCTutor2.models.Person;
 import ru.doreamon08.SpringMVCTutor2.util.PersonValidator;
@@ -15,11 +16,13 @@ import javax.validation.Valid;
 @RequestMapping("/people")
 public class PeopleController {
     private final PersonDAO personDAO;
+    private final BookDao bookDao;
     private final PersonValidator personValidator;
 
     @Autowired
-    public PeopleController(PersonDAO personDAO, PersonValidator personValidator) {
+    public PeopleController(PersonDAO personDAO, BookDao bookDao, PersonValidator personValidator) {
         this.personDAO = personDAO;
+        this.bookDao = bookDao;
         this.personValidator = personValidator;
     }
 
@@ -29,9 +32,10 @@ public class PeopleController {
         return "people/index";
     }
 
-    @GetMapping("{id}")
-    public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", personDAO.show(id));
+    @GetMapping("{person_id}")
+    public String show(@PathVariable("person_id") int person_id, Model model) {
+        model.addAttribute("person", personDAO.show(person_id));
+        model.addAttribute("books", personDAO.indexOfBooks(person_id));
         return "people/show";
     }
 
@@ -44,6 +48,7 @@ public class PeopleController {
     @PostMapping()
     public String create(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult) {
+
         personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors())
@@ -60,7 +65,8 @@ public class PeopleController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
+    public String update(@ModelAttribute("person") @Valid Person person,
+                         BindingResult bindingResult,
                          @PathVariable("id") int id) {
         personValidator.validate(person, bindingResult);
 

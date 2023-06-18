@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://thymeleaf.org" >
 <head>
     <meta charset="UTF-8">
     <title>Person</title>
@@ -9,7 +9,18 @@
 <p th:text="'ID: ' + ${person.getId()}">VALUE</p>
 <p th:text="'NAME: ' + ${person.getName()}">VALUE</p>
 <p th:text="'AGE: ' + ${person.getAge()}">VALUE</p>
-<p th:text="'ADDRESS: ' + ${person.getAddress()}">VALUE</p>
+
+<div th:if="${books.isEmpty()}">
+    <DIV>PERSON DOES NOT HAVE BOOKS</DIV>
+</div>
+<div th:if="${not books.isEmpty()}">
+    <div>BOOKS:</div>
+    <div th:each="book : ${books}">
+        <a th:href="@{/books/{id}(id=${book.getBook_id()})}"
+           th:text="${book.getName()} + ', ' + ${book.getYear()}">book</a>
+    </div>
+</div>
+<br>
 
 <a th:href="@{/people/{id}/edit(id=${person.getId()})}">
     <input type="submit" value="EDIT"/>

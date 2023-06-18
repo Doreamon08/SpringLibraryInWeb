@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show</title>
+</head>
+<body>
+
+<p th:text="'ID: ' + ${book.getBook_id()}">VALUE</p>
+<p th:text="'NAME: ' + ${book.getName()}">VALUE</p>
+<p th:text="'AUTHOR: ' + ${book.getAuthor()}">VALUE</p>
+<p th:text="'YEAR: ' + ${book.getYear()}">VALUE</p>
+<p>
+    <div th:if="${book.getPerson_id()} == 0">
+        <span>This book is free. Choose person: </span>
+
+<!--        <form th:method="PATCH" th:action="@{/books/{id}/assign(id=${book.getBook_id()})}">-->
+<!--            <label for="person">CHOOSE PERSON</label>-->
+<!--            <select th:object="${person}" th:field="*{person_id}" id="person">-->
+<!--                <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getName()}">-->
+<!--                </option>-->
+<!--            </select>-->
+
+<!--            <div th:each="person : ${people}">-->
+<!--                <a th:href="@{/people/{id}(id=${person.getId()})}"-->
+<!--                   th:text="${person.getName()}">user</a>-->
+<!--            </div>-->
+<!--            <input type="submit" value="ASSIGN"/>-->
+
+<!--            <select>-->
+<!--                <option th:each="person : ${people}" th:value="${person.getId()}"-->
+<!--                        th:text="${person.getName()}">user</option>-->
+<!--            </select>-->
+<!--            <input type="submit" value="ASSIGN"/>-->
+
+            <form th:method="PATCH" th:action="@{/books/{id}/assign(id=${book.getBook_id()})}">
+                <select name="personId">
+                    <option th:each="person : ${people}" th:value="${person.getId()}"
+                            th:text="${person.getName()}">user</option>
+                </select>
+                <input type="submit" value="ASSIGN"/>
+            </form>
+
+<!--        </form>-->
+    </div>
+
+    <div th:if="${book.getPerson_id()} != 0">
+        <span  th:text="'CURRENT OWNER: ' + ${person.getName()}">VALUE</span>
+        <form th:method="PATCH" th:action="@{/books/{id}/free(id=${book.getBook_id()})}">
+            <input type="submit" value="FREE"/>
+        </form>
+    </div>
+</p>
+
+<a th:href="@{/books/{book_id}/edit(book_id=${book.getBook_id()})}">
+  <input type="submit" value="EDIT"/>
+</a>
+
+<form th:method="DELETE" th:action="@{/books/{book_id}(book_id=${book.getBook_id()})}">
+  <input type="submit" value="DELETE"/>
+</form>
+
+</body>
+</html>
